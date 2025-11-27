@@ -1,0 +1,31 @@
+---
+all:
+  children:
+    webservers:
+      hosts:
+        web1.diploma.ru-central1.internal:
+          ansible_host: 10.132.0.32
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q ubuntu@89.169.145.11"'
+        web2.diploma.ru-central1.internal:
+          ansible_host: 10.133.0.3
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q ubuntu@89.169.145.11"'
+    zabbix:
+      hosts:
+        zabbix.diploma.ru-central1.internal:
+          ansible_host: 158.160.107.7
+          # Zabbix имеет внешний IP, поэтому ProxyJump не нужен
+    elasticsearch:
+      hosts:
+        elastic.diploma.ru-central1.internal:
+          ansible_host: 10.132.0.11
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q ubuntu@89.169.145.11"'
+    kibana:
+      hosts:
+        kibana.diploma.ru-central1.internal:
+          ansible_host: 158.160.34.63
+          # Kibana имеет внешний IP, поэтому ProxyJump не нужен
+
+  vars:
+    ansible_user: ubuntu
+    ansible_ssh_private_key_file: ~/.ssh/id_rsa_diploma
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'

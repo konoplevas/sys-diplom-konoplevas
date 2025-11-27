@@ -1,0 +1,63 @@
+---
+- name: Install nginx (without updating cache)
+  apt:
+    name: nginx
+    state: present
+    update_cache: no
+
+- name: Remove default nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Create custom nginx config
+  copy:
+    content: |
+      server {
+          listen 80;
+          root /var/www/html;
+          index index.html index.htm;
+          
+          location / {
+              try_files $uri $uri/ =404;
+          }
+          
+          access_log /var/log/nginx/access.log;
+          error_log /var/log/nginx/error.log;
+      }
+    dest: /etc/nginx/sites-available/diploma
+    mode: '0644'
+
+- name: Enable custom site
+  file:
+    src: /etc/nginx/sites-available/diploma
+    dest: /etc/nginx/sites-enabled/diploma
+    state: link
+
+- name: Create website directory
+  file:
+    path: /var/www/html
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Deploy website
+  copy:
+    src: files/index.html
+    dest: /var/www/html/index.html
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Start and enable nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Wait for nginx to start
+  wait_for:
+    port: 80
+    delay: 5
+    timeout: 30

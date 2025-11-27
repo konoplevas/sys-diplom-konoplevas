@@ -1,0 +1,23 @@
+#cloud-config
+users:
+  - name: ubuntu
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCiC+boBIiSA9lhdl1Mfx4M+c04c9gDULs3y8SWCJ+2dTGF4uWtVW/K7stq0+EIvi+q3aglLwXNEbLrTcq7JbDYnVIQ0+I/9u+L9cl0dKShDq7s9s8tQZphr7kpijqb6SDYEldnc2FxbzMe8ezs1zAzeXT3PkxsXdo1a7QS3VMOTegbxJbCR36oJQPyS0YEcvBu76Nvp558+hnWO8he7G0HZH2/Gg8HR0rttUaeZR50HPsX2R0K4YANx7y8+8LhHsEfphTfAUPUWjc6P4XiUH6uvv2Hj0nPmXhk+Sj9NqkwTPuk609pSBWQ6WPtLE48tq50nGnfjk3/mrMEaLqjs57d9omScafWlLPeMa4xxr0+6EPoY9RRAtajVfsf7bJDJxf5Q/0PS7wxVxocV2eJLzogTGuTUqYpr/D34KbJ3d2DpY3rz8OLFYfRXJVybbzOyoJ37ZUghZohhhSsmr1BmaCkKM6TKM4l2mYoLRp6G12P1TCIVXKgB+d+4iLEFo0SZ6MBURL15OAnqHqvBsaV7EnX8FGxsQCPbjLsh2kmQDaYab8qFoQkSqGl2jjnOz0VrUtaUTcVGu2qa6MGX0XqBQVU3qaAQYUHq14vVuRP2EHbKnfQVMe8FYgqQcJaEuAte1KlCHeToLONwljKHScUfdNszbUlTMX/37DZ1eFXZEesAQ== diploma-yandex-cloud
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - openssh-server
+  - nginx
+  - curl
+
+runcmd:
+  - systemctl enable ssh
+  - systemctl start ssh
+  - ufw allow 22
+  - ufw allow 80
+  - echo "Web server $(hostname) is ready!" > /var/www/html/index.html

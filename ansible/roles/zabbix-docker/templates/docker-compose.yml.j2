@@ -1,0 +1,49 @@
+version: '3.5'
+services:
+  zabbix-server:
+    image: zabbix/zabbix-server-pgsql:alpine-6.4-latest
+    container_name: zabbix-server
+    restart: unless-stopped
+    ports:
+      - "10051:10051"
+    environment:
+      - DB_SERVER_HOST=zabbix-database
+      - POSTGRES_USER=zabbix
+      - POSTGRES_PASSWORD=zabbix
+      - POSTGRES_DB=zabbix
+    volumes:
+      - /opt/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
+      - /opt/zabbix/externalscripts:/usr/lib/zabbix/externalscripts
+      - /opt/zabbix/enc:/var/lib/zabbix/enc
+    depends_on:
+      - zabbix-database
+
+  zabbix-database:
+    image: postgres:15-alpine
+    container_name: zabbix-database
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=zabbix
+      - POSTGRES_PASSWORD=zabbix
+      - POSTGRES_DB=zabbix
+    volumes:
+      - zabbix-database-data:/var/lib/postgresql/data
+
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-6.4-latest
+    container_name: zabbix-web
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - ZBX_SERVER_HOST=zabbix-server
+      - DB_SERVER_HOST=zabbix-database
+      - POSTGRES_USER=zabbix
+      - POSTGRES_PASSWORD=zabbix
+      - POSTGRES_DB=zabbix
+    depends_on:
+      - zabbix-server
+      - zabbix-database
+
+volumes:
+  zabbix-database-data:

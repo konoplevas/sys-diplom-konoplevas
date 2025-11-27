@@ -1,0 +1,15 @@
+---
+- name: Configure Web Servers
+  hosts: webservers
+  become: yes
+  roles:
+    - nginx
+    - zabbix-agent
+    - log-sender
+
+- name: Configure Zabbix Server with ELK
+  hosts: zabbix
+  become: yes
+  roles:
+    - zabbix-server
+    - zabbix-agent
