@@ -1,0 +1,6 @@
+---
+- name: Configure Zabbix agents on web servers
+  hosts: webservers
+  become: yes
+  roles:
+    - zabbix-agent

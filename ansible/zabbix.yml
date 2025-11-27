@@ -1,0 +1,6 @@
+---
+- name: Configure Zabbix server with Docker
+  hosts: zabbix
+  become: yes
+  roles:
+    - zabbix-docker

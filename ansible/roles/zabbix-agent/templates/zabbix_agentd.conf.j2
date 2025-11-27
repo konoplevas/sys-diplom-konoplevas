@@ -1,0 +1,9 @@
+# Zabbix Agent Configuration
+PidFile=/var/run/zabbix/zabbix_agentd.pid
+LogFile=/var/log/zabbix/zabbix_agentd.log
+LogFileSize=0
+Server=10.130.0.13
+ServerActive=10.130.0.13
+Hostname={{ inventory_hostname }}
+HostMetadata=linux webserver
+Include=/etc/zabbix/zabbix_agentd.d/*.conf

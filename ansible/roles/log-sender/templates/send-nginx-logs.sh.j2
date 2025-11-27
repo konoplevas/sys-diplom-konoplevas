@@ -1,0 +1,37 @@
+#!/bin/bash
+ELASTIC_URL="http://{{ elasticsearch_ip }}:9200/nginx-logs/_doc"
+HOSTNAME="{{ inventory_hostname }}"
+
+send_logs() {
+    local log_file=$1
+    local log_type=$2
+    
+    echo "Starting to monitor $log_file on $HOSTNAME"
+    
+    tail -F $log_file | while read line; do
+        escaped_line=$(echo "$line" | sed 's/"/\\"/g')
+        timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        
+        json_data="{\"@timestamp\":\"$timestamp\",\"host\":\"$HOSTNAME\",\"message\":\"$escaped_line\",\"log_type\":\"$log_type\"}"
+        
+        response=$(curl -s -w "%{http_code}" -X POST $ELASTIC_URL \
+            -H "Content-Type: application/json" \
+            -d "$json_data" 2>/dev/null)
+        
+        http_code=${response: -3}
+        
+        if [ "$http_code" = "201" ] || [ "$http_code" = "200" ]; then
+            echo "✓ Sent $log_type log from $HOSTNAME"
+        else
+            echo "✗ Failed to send $log_type log (HTTP $http_code)"
+        fi
+    done
+}
+
+send_logs "/var/log/nginx/access.log" "nginx-access" &
+send_logs "/var/log/nginx/error.log" "nginx-error" &
+
+echo "Nginx log sender started on $HOSTNAME"
+echo "Logs are being sent to: $ELASTIC_URL"
+
+wait

@@ -1,0 +1,83 @@
+---
+- name: Install Docker
+  apt:
+    name:
+      - docker.io
+      - docker-compose
+    state: present
+    update_cache: yes
+
+- name: Add ubuntu user to docker group
+  user:
+    name: ubuntu
+    groups: docker
+    append: yes
+
+- name: Stop any existing Zabbix containers
+  shell: |
+    sudo docker-compose -f /opt/zabbix/docker-compose.yml down || true
+  args:
+    executable: /bin/bash
+  ignore_errors: yes
+
+- name: Create directories for Zabbix
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+  loop:
+    - /opt/zabbix
+    - /opt/zabbix/alertscripts
+    - /opt/zabbix/externalscripts
+    - /opt/zabbix/enc
+
+- name: Create Docker Compose file for Zabbix
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/zabbix/docker-compose.yml
+    owner: ubuntu
+    group: ubuntu
+
+- name: Start Zabbix stack with sudo
+  shell: |
+    cd /opt/zabbix && sudo docker-compose up -d
+  args:
+    executable: /bin/bash
+
+- name: Wait for Zabbix to start
+  wait_for:
+    port: 8080
+    host: 127.0.0.1
+    delay: 10
+    timeout: 120
+
+- name: Install Apache as reverse proxy
+  apt:
+    name: apache2
+    state: present
+
+- name: Enable Apache modules
+  shell: |
+    a2enmod proxy
+    a2enmod proxy_http
+    a2enmod rewrite
+  args:
+    executable: /bin/bash
+
+- name: Create Apache virtual host for Zabbix
+  template:
+    src: zabbix-apache.conf.j2
+    dest: /etc/apache2/sites-available/zabbix.conf
+
+- name: Enable Zabbix site
+  shell: |
+    a2dissite 000-default.conf
+    a2ensite zabbix.conf
+  args:
+    executable: /bin/bash
+
+- name: Restart Apache
+  systemd:
+    name: apache2
+    state: restarted

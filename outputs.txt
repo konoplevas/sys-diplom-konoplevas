@@ -1,0 +1,7 @@
+alb_external_ip = "130.193.56.231"
+bastion_external_ip = "89.169.145.11"
+elastic_internal_ip = "10.132.0.11"
+kibana_external_ip = "158.160.34.63"
+web1_internal_ip = "10.132.0.32"
+web2_internal_ip = "10.133.0.3"
+zabbix_external_ip = "158.160.107.7"
