@@ -60,7 +60,7 @@ resource "yandex_compute_instance" "bastion" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa_diploma.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
@@ -94,7 +94,7 @@ resource "yandex_compute_instance" "web1" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa_diploma.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
@@ -128,7 +128,7 @@ resource "yandex_compute_instance" "web2" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa_diploma.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
@@ -161,7 +161,7 @@ resource "yandex_compute_instance" "zabbix" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa_diploma.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
@@ -194,7 +194,7 @@ resource "yandex_compute_instance" "elastic" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa_diploma.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
@@ -227,7 +227,7 @@ resource "yandex_compute_instance" "kibana" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa_diploma.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
