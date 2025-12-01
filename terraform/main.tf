@@ -42,8 +42,8 @@ resource "yandex_compute_instance" "bastion" {
   platform_id = "standard-v2"
 
   resources {
-    cores  = 2
-    memory = 2
+    cores         = 2
+    memory        = 2
     core_fraction = 20
   }
 
@@ -76,8 +76,8 @@ resource "yandex_compute_instance" "web1" {
   zone        = "ru-central1-a"
 
   resources {
-    cores  = 2
-    memory = 2
+    cores         = 2
+    memory        = 2
     core_fraction = 20
   }
 
@@ -110,8 +110,8 @@ resource "yandex_compute_instance" "web2" {
   zone        = "ru-central1-b"
 
   resources {
-    cores  = 2
-    memory = 2
+    cores         = 2
+    memory        = 2
     core_fraction = 20
   }
 
@@ -143,8 +143,8 @@ resource "yandex_compute_instance" "zabbix" {
   platform_id = "standard-v2"
 
   resources {
-    cores  = 2
-    memory = 4
+    cores         = 2
+    memory        = 4
     core_fraction = 20
   }
 
@@ -176,8 +176,8 @@ resource "yandex_compute_instance" "elastic" {
   platform_id = "standard-v2"
 
   resources {
-    cores  = 2
-    memory = 4
+    cores         = 2
+    memory        = 4
     core_fraction = 20
   }
 
@@ -209,8 +209,8 @@ resource "yandex_compute_instance" "kibana" {
   platform_id = "standard-v2"
 
   resources {
-    cores  = 2
-    memory = 2
+    cores         = 2
+    memory        = 2
     core_fraction = 20
   }
 
@@ -236,25 +236,6 @@ resource "yandex_compute_instance" "kibana" {
 }
 
 # Используем существующие ALB компоненты
-data "yandex_alb_target_group" "existing" {
-  name = "web-target-group"
-}
-
-data "yandex_alb_backend_group" "existing" {
-  name = "web-backend-group"
-}
-
-data "yandex_alb_http_router" "existing" {
-  name = "web-router"
-}
-
-data "yandex_vpc_security_group" "alb-sg" {
-  name = "alb-sg"
-}
-
-data "yandex_alb_load_balancer" "existing" {
-  name = "web-balancer"
-}
 
 # NAT Gateway
 resource "yandex_vpc_gateway" "nat-gateway" {
@@ -275,29 +256,241 @@ resource "yandex_vpc_route_table" "nat-route" {
 # Обновляем приватные подсети чтобы использовали NAT
 
 
-# Snapshot schedule для резервного копирования (соответствует требованиям диплома)
+# Security Groups
+resource "yandex_vpc_security_group" "bastion_sg" {
+  name       = "bastion-security-group"
+  network_id = data.yandex_vpc_network.existing.id
 
-# Snapshot schedule для резервного копирования (точное соответствие диплому)
-resource "yandex_compute_snapshot_schedule" "daily-backup" {
-  name = "daily-backup"
+  ingress {
+    protocol       = "TCP"
+    description    = "SSH"
+    port           = 22
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    protocol       = "ANY"
+    description    = "Outbound traffic"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "yandex_vpc_security_group" "zabbix_sg" {
+  name       = "zabbix-security-group"
+  network_id = data.yandex_vpc_network.existing.id
+
+  ingress {
+    protocol       = "TCP"
+    description    = "HTTP for web interface"
+    port           = 80
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "ALB Health Checks"
+    port           = 80
+    v4_cidr_blocks = ["198.18.235.0/24", "198.18.248.0/24"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Zabbix agent"
+    port           = 10050
+    v4_cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Zabbix server"
+    port           = 10051
+    v4_cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "SSH"
+    port           = 22
+    v4_cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    protocol       = "ANY"
+    description    = "Outbound traffic"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "yandex_vpc_security_group" "elastic_sg" {
+  name       = "elastic-security-group"
+  network_id = data.yandex_vpc_network.existing.id
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Elasticsearch HTTP"
+    port           = 9200
+    v4_cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Kibana"
+    port           = 5601
+    v4_cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "SSH"
+    port           = 22
+    v4_cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  egress {
+    protocol       = "ANY"
+    description    = "Outbound traffic"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Security Groups
+# ALB для Zabbix
+resource "yandex_alb_target_group" "zabbix_tg" {
+  name = "zabbix-target-group"
+
+  target {
+    subnet_id  = data.yandex_vpc_subnet.public-a.id
+    ip_address = yandex_compute_instance.zabbix.network_interface.0.ip_address
+  }
+}
+
+resource "yandex_alb_backend_group" "zabbix_bg" {
+  name = "zabbix-backend-group"
+
+  http_backend {
+    name             = "zabbix-backend"
+    weight           = 1
+    port             = 80
+    target_group_ids = [yandex_alb_target_group.zabbix_tg.id]
+
+    healthcheck {
+      timeout          = "10s"
+      interval         = "2s"
+      healthcheck_port = 80
+      http_healthcheck {
+        path = "/"
+      }
+    }
+  }
+}
+
+resource "yandex_alb_http_router" "zabbix_router" {
+  name = "zabbix-router"
+}
+
+resource "yandex_alb_virtual_host" "zabbix_host" {
+  name           = "zabbix-virtual-host"
+  http_router_id = yandex_alb_http_router.zabbix_router.id
+
+  route {
+    name = "zabbix-route"
+    http_route {
+      http_route_action {
+        backend_group_id = yandex_alb_backend_group.zabbix_bg.id
+        timeout          = "60s"
+      }
+    }
+  }
+}
+
+#resource "yandex_alb_load_balancer" "zabbix_alb" {
+#  name               = "zabbix-load-balancer"
+#  network_id         = data.yandex_vpc_network.existing.id
+#
+#  allocation_policy {
+#    location {
+#      zone_id   = "ru-central1-a"
+#      subnet_id = data.yandex_vpc_subnet.public-a.id
+#    }
+#  }
+#
+#  listener {
+#    name = "zabbix-listener"
+#    endpoint {
+#      address {
+#        external_ipv4_address {
+#        }
+#      }
+#      ports = [80]
+#    }
+#    http {
+#      handler {
+#        http_router_id = yandex_alb_http_router.zabbix_router.id
+#      }
+#    }
+
+# Security Group specifically for ALB
+resource "yandex_vpc_security_group" "alb_sg" {
+  name       = "alb-security-group"
+  network_id = data.yandex_vpc_network.existing.id
+
+  ingress {
+    protocol       = "TCP"
+    description    = "HTTP"
+    port           = 80
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "ALB Health Checks"
+    port           = 80
+    v4_cidr_blocks = ["198.18.235.0/24", "198.18.248.0/24"]
+  }
+
+  egress {
+    protocol       = "ANY"
+    description    = "Outbound traffic"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Data source for existing working ALB
+data "yandex_alb_load_balancer" "existing" {
+  name = "web-balancer"
+}
+
+
+# Output for verification
+
+
+
+
+# Daily snapshot schedules for all VMs
+resource "yandex_compute_snapshot_schedule" "daily_backups" {
+  name             = "daily-snapshots"
+  description      = "Daily backups for all VMs"
+  snapshot_count   = 7
+  retention_period = "604800s" # 7 days in seconds
 
   schedule_policy {
-    expression = "0 2 * * *"  # Ежедневное копирование в 2:00
+    expression = "0 2 * * *" # Daily at 02:00 AM
   }
 
-  retention_period = "168h"  # Ограничение времени жизни - неделя (168 часов)
+  snapshot_spec {}
 
-  snapshot_spec {
-    description = "Daily backup - Diploma project"
-  }
-
-  # Все диски ВМ
+  # List of all VM disks
   disk_ids = [
     yandex_compute_instance.bastion.boot_disk.0.disk_id,
     yandex_compute_instance.web1.boot_disk.0.disk_id,
     yandex_compute_instance.web2.boot_disk.0.disk_id,
     yandex_compute_instance.zabbix.boot_disk.0.disk_id,
     yandex_compute_instance.elastic.boot_disk.0.disk_id,
-    yandex_compute_instance.kibana.boot_disk.0.disk_id,
+    yandex_compute_instance.kibana.boot_disk.0.disk_id
   ]
+}
+
+output "snapshot_schedule_id" {
+  value       = yandex_compute_snapshot_schedule.daily_backups.id
+  description = "Snapshot schedule ID"
 }

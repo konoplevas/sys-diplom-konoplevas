@@ -1,0 +1,26 @@
+---
+- name: Create kibana directory
+  file:
+    path: /home/ubuntu/kibana
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+
+- name: Copy docker-compose for kibana
+  template:
+    src: docker-compose.yml.j2
+    dest: /home/ubuntu/kibana/docker-compose.yml
+    owner: ubuntu
+    group: ubuntu
+
+- name: Start kibana
+  community.docker.docker_compose:
+    project_src: /home/ubuntu/kibana
+    state: present
+
+- name: Wait for kibana to start
+  wait_for:
+    port: 5601
+    host: "{{ ansible_default_ipv4.address }}"
+    delay: 30
+    timeout: 120

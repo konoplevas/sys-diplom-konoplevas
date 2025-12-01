@@ -1,0 +1,15 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/*.log
+    - /var/log/syslog
+    - /var/log/messages
+
+output.elasticsearch:
+  hosts: ["{{ hostvars['elasticsearch.ru-central1.internal']['ansible_default_ipv4']['address'] }}:9200"]
+  username: "elastic"
+  password: "{{ elastic_password }}"
+
+setup.kibana:
+  host: "{{ hostvars['kibana.ru-central1.internal']['ansible_default_ipv4']['address'] }}:5601"
