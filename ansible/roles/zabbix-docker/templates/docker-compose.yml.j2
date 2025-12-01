@@ -9,7 +9,7 @@ services:
     environment:
       - DB_SERVER_HOST=zabbix-database
       - POSTGRES_USER=zabbix
-      - POSTGRES_PASSWORD=zabbix
+      - POSTGRES_PASSWORD={{ zabbix_password }}
       - POSTGRES_DB=zabbix
     volumes:
       - /opt/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_USER=zabbix
-      - POSTGRES_PASSWORD=zabbix
+      - POSTGRES_PASSWORD={{ zabbix_password }}
       - POSTGRES_DB=zabbix
     volumes:
       - zabbix-database-data:/var/lib/postgresql/data
@@ -39,7 +39,7 @@ services:
       - ZBX_SERVER_HOST=zabbix-server
       - DB_SERVER_HOST=zabbix-database
       - POSTGRES_USER=zabbix
-      - POSTGRES_PASSWORD=zabbix
+      - POSTGRES_PASSWORD={{ zabbix_password }}
       - POSTGRES_DB=zabbix
     depends_on:
       - zabbix-server
