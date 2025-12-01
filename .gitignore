@@ -3,3 +3,15 @@
 .terraform/
 terraform.tfvars
 *.tfvars
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/terraform.tfvars
+terraform/*.tfvars
+terraform/*.tfvars.backup
+terraform/.terraform.lock.hcl
+
+# Backup files
+*.backup
