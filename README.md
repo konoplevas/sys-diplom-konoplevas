@@ -13,33 +13,39 @@
 
 Разворачиваем Terraform (скриншот 1)
 
-<img width="493" height="222" alt="Разворачиваем терраформ" src="https://github.com/user-attachments/assets/423e21fa-3830-4f4d-b4ac-50fb8f734fcb" />
+<img width="624" height="171" alt="Терраформ скрин 1" src="https://github.com/user-attachments/assets/1689ed88-f1f6-4868-b08f-7376a2b4803d" />
 
-Структура проекта после успешной установки (скриншот 2-3)
+Структура проекта после успешной установки (скриншот 2-4)
+<img width="1793" height="565" alt="Терраформ 2" src="https://github.com/user-attachments/assets/fd7f1303-bfaa-4f10-a8a5-1f454fc49f29" />
 
-<img width="1793" height="565" alt="Структура проекта" src="https://github.com/user-attachments/assets/a2fb4708-aa9f-441b-a125-f2c14f4007c9" />
+<img width="994" height="326" alt="Терраформ 3" src="https://github.com/user-attachments/assets/06de0ef4-f646-4928-a258-2b83b3712c32" />
 
-<img width="1020" height="567" alt="Группа безопасностис" src="https://github.com/user-attachments/assets/287b4a81-6d58-4f6e-a170-78493a1cfab8" />
+## Сайт<img width="1057" height="354" alt="Терраформ 4" src="https://github.com/user-attachments/assets/4d9b5a75-5fe3-4e56-9829-bf8b87bedae5" />
 
-## Сайт
+Разворачиваем ПО при Ansible (криншот 5)
+
+<img width="960" height="776" alt="Ансибл" src="https://github.com/user-attachments/assets/82fe4694-db32-4e09-abd1-92a87ebcd54c" />
 
 Поле этого создаём сайт, настраиваем балансировщик и проверяем работоспособность.
 
-Создаём сайт (скриншот 4)
+Создаём сайт (скриншот 6-7)
 
-<img width="797" height="227" alt="Сайт создание" src="https://github.com/user-attachments/assets/c4da184b-fb88-4079-b981-ceec6bfc1f8b" />
+<img width="743" height="600" alt="Сайт 1" src="https://github.com/user-attachments/assets/f44ef103-fc65-4e2f-aeaf-fa39e96cde9d" />
 
-Устанавливаем балансировщик (скриншот 5)
+<img width="1919" height="829" alt="Сайт 2" src="https://github.com/user-attachments/assets/f8c70125-a685-40c9-9e18-654f8a198956" />
 
-<img width="726" height="142" alt="устанавливаем балансировщик" src="https://github.com/user-attachments/assets/1ce19fbb-877e-4925-8d6e-4f78818269c0" />
+Устанавливаем балансировщик (скриншот 8)
 
-Проверка работоспособности балансировщика (скриншот 6-8)
+<img width="676" height="152" alt="Сайт балансировщик" src="https://github.com/user-attachments/assets/89518f81-1971-4063-8e38-858085ee707b" />
 
-<img width="1919" height="829" alt="Сайт балансировщик 1" src="https://github.com/user-attachments/assets/922f0d6a-f7c8-4a3b-9b37-fba9c7550726" />
+Проверка работоспособности балансировщика с отключением попеременно web 1 и web 2 (скриншот 9-11)
 
-<img width="1890" height="802" alt="Сайт балансировщик 2" src="https://github.com/user-attachments/assets/e8eb2037-72ea-421b-a2a3-6464742f756d" />
+<img width="519" height="441" alt="Сайт балансировщик 2" src="https://github.com/user-attachments/assets/5b979ffe-b172-4718-a5f9-6672c39533fc" />
 
-<img width="866" height="271" alt="Балансировщик распределение нагрузки" src="https://github.com/user-attachments/assets/ce7a54cb-141d-45a3-adb0-446f9c940c9c" />
+<img width="1021" height="347" alt="Сайт отключение web 1" src="https://github.com/user-attachments/assets/e7e2ec59-0bb8-4e1d-9ca4-4d0788a0089c" />
+
+<img width="1028" height="350" alt="Сайт проверка отключение web 2" src="https://github.com/user-attachments/assets/6c2ce99a-acda-46b4-b4e6-081bf1516003" />
+
 
 Сайт доступен по адресу: http://130.193.56.231/
 
@@ -49,69 +55,78 @@
 
 Настраиваем дешборды с отображением метрик, минимальный набор — по принципу USE (Utilization, Saturation, Errors) для CPU, RAM, диски, сеть, http запросов к веб-серверам. 
 
-Установка Zabbix (скриншот 9)
+Установка Zabbix и Zabbix agent. Добавляем ВМ для мониторинга в Zabbix(скриншот 12-14)
 
-<img width="1314" height="222" alt="Ансибал установка заббикс" src="https://github.com/user-attachments/assets/b3a6d863-701d-4eb6-b7eb-cb9fb5fab1f5" />
+<img width="1781" height="288" alt="Хосты в заббикс" src="https://github.com/user-attachments/assets/49c884ac-c969-43a1-bf39-d3629fe80034" />
 
-Установка Zabbix agent на сервера (скриншот 10)
+<img width="950" height="428" alt="Заббикс агент 1" src="https://github.com/user-attachments/assets/17762361-2d84-4a04-a0e7-67d688d61e29" />
 
-<img width="1325" height="775" alt="Установка заббикс агентов на сервера" src="https://github.com/user-attachments/assets/98a5dff5-69c2-42ab-9dd1-6da6e89f5f8f" />
+<img width="930" height="413" alt="Заббикс агент 2" src="https://github.com/user-attachments/assets/2e7b0254-f480-4382-b48d-54b0626c79a2" />
 
-Дашборды мониторинга Zabbix в вебинтерфейсе (скриншот 11-13)
+Создаём дашборды мониторинга Zabbix в вебинтерфейсе и настраиваем триггеры (скриншот 14-17)
 
-<img width="1918" height="842" alt="Мониторинг заббикс" src="https://github.com/user-attachments/assets/331f15e0-6ddb-47f0-a59e-eb814b8578a1" />
+<img width="1824" height="843" alt="Заббикс мониторинг" src="https://github.com/user-attachments/assets/07868fea-35e4-48de-9a5a-adb40ffce638" />
 
-<img width="1896" height="445" alt="Мониторинг заббикс 2" src="https://github.com/user-attachments/assets/17be7d75-3e3c-488d-9a51-2f11d5ab182f" />
+<img width="1826" height="807" alt="Забикс мониторинг 2" src="https://github.com/user-attachments/assets/5cfd7dc6-fb37-4eb0-9011-f9fa237432a7" />
 
-<img width="1916" height="823" alt="Мониторинг Zabbix" src="https://github.com/user-attachments/assets/ceb4c3b8-422d-4ef0-ac58-cfd96471109c" />
+<img width="1782" height="440" alt="Забикс мониторинг 3" src="https://github.com/user-attachments/assets/7030fce6-7b21-4768-8c9e-8e9a3bc9915a" />
 
-Zabbix доступен по ссылке http://158.160.107.7:8080/zabbix.php?action=dashboard.view
+<img width="1630" height="329" alt="Заббикс тригеры" src="https://github.com/user-attachments/assets/56a9ea03-e3b4-47cb-8d7d-565595821ef6" />
+
+Zabbix доступен по ссылке http://158.160.107.7:8080/
 
 Login: Admin
+
 Password: zabbix
 
 ## Логи
 
-на 2 ВМ, разворачиваем Elasticsearch и Kibana. Используем bastion host как jump server. Конфигурируем соединение с Elasticsearch. Так как установить filebeat и другие аналогичные программы установить не удалось, изз-за блокировки на территории РФ, на ВМ к веб-серверам был установлен скрипт для отправки access.log, error.log nginx в Elasticsearch.
+на 2 ВМ, разворачиваем Elasticsearch и Kibana. Настраиваем мониторинг логов в вебинтерфейсе Kibana. Конфигурируем соединение с Elasticsearch. Устанавливаем Filebeat для отправки access.log, error.log nginx в Elasticsearch.
 
-Установка Elasticsearch (скриншот 14)
+Установка Elasticsearch (скриншот 18)
 
-<img width="599" height="414" alt="Установка Еластик" src="https://github.com/user-attachments/assets/584ee9cb-53f0-4e86-80ad-190ec1927b30" />
+<img width="1025" height="451" alt="Установка еластик" src="https://github.com/user-attachments/assets/860ed498-f42a-4dc6-b17d-2ac4aa6eb473" />
 
-Проверка доступности Elasticsearch (скриншот 15)
+Проверка доступности Elasticsearch (скриншот 19-20)
 
-<img width="930" height="444" alt="Эластик веб" src="https://github.com/user-attachments/assets/f12bc3bc-e965-4d80-8a9c-41846b20b343" />
+<img width="581" height="456" alt="Еластик веб" src="https://github.com/user-attachments/assets/cca51319-f718-426d-9436-ce7e0947a65e" />
 
-Установка Kibana (скриншот 15)
+<img width="1236" height="652" alt="Еластик проверка" src="https://github.com/user-attachments/assets/9e6921e1-4164-4395-b68d-39b4ea95b019" />
 
-<img width="1092" height="133" alt="установка кибана" src="https://github.com/user-attachments/assets/f1c62022-7d7d-4cf2-ad14-236c4e01c372" />
+Установка Kibana (скриншот 21)
 
-Проверка сбора логов (скриншот 16)
+<img width="1338" height="629" alt="Кибана проверка" src="https://github.com/user-attachments/assets/78fbbf82-6dda-4737-8dc1-41440e014682" />
 
-<img width="1326" height="229" alt="Эластик сбор логов работает" src="https://github.com/user-attachments/assets/dfd20931-63c9-4ae2-9636-4b9699f5d2d6" />
+Устанавливаем Filebeat для отправки логов и проверяем работоспособность( скриншот 22)
 
-Мониторинг Kibana (скриншот 17-18)
+<img width="1326" height="521" alt="Логи филбит веб1" src="https://github.com/user-attachments/assets/c677b339-c739-422a-ab15-ef2052440540" />
 
-<img width="1707" height="803" alt="Кибана мониторинг" src="https://github.com/user-attachments/assets/bae506c1-359f-43d9-acfb-066dfe699a22" />
+<img width="1340" height="600" alt="ЛОГИ филбит веб2" src="https://github.com/user-attachments/assets/a7f570a2-f7ba-44b9-b96b-a230822f6818" />
 
-<img width="1916" height="805" alt="Кибана логи" src="https://github.com/user-attachments/assets/a7dbae48-e39c-472c-9e23-00673c22ea41" />
+Проверка сбора логов Kibana (скриншот 23-24)
 
-Elastic доступен в вебинтерфейсе: http://localhost:9200/
+<img width="1787" height="734" alt="Кибана логи 1" src="https://github.com/user-attachments/assets/2f42053f-d824-460e-9d0f-aa0395a1c6c8" />
 
-Kibana выход в веб интерфейс осуществляется при помощи проброса порта, доступна по адресу: http://158.160.34.63:5601/
+<img width="1782" height="841" alt="Кибана дашборд" src="https://github.com/user-attachments/assets/0dade5d1-ac5a-4afe-833d-3d4ca44cd5a4" />
+
+Elastic доступен по адресу: http://localhost:9200/
+
+Kibana доступна по адресу: http://158.160.34.63:5601/
 
 ## Резервное копирование
 
 Приступаем к настройке резервного капирования, snapshot дисков всех ВМ. Ограничеваем время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование в 2 часа ночи.
 
-Снапшоты установка (скриншот 19)
+Снапшоты (скриншот 25)
 
-<img width="920" height="362" alt="Снапшоты установка и работа" src="https://github.com/user-attachments/assets/9cc84854-5c17-4cfc-b5ec-597d9bca4820" />
+<img width="1441" height="313" alt="Сна<img width="1053" height="714" alt="Снапшот диски" src="https://github.com/user-attachments/assets/c13e538e-ff7a-40b7-9691-06567dc578fa" />
 
-Расписание снапшотов (скриншот 20)
- <img width="791" height="257" alt="Расписание снапшотов" src="https://github.com/user-attachments/assets/8606c149-1333-4fab-8418-3e1885499765" />
- Проверка работоспособности снапшотов (скриншот 21)
-<img width="1881" height="789" alt="Снапшоты резервное копирование" src="https://github.com/user-attachments/assets/92b1ebe0-8fc7-4db2-afae-b82e6db1f777" />
+<img width="1053" height="714" alt="Снапшот диски" src="https://github.com/user-attachments/assets/bf109565-d038-4846-956c-ab95704ae60a" />
+
+Расписание снапшотов (скриншот 26)
+
+<img width="1266" height="447" alt="Снапшот расписание" src="https://github.com/user-attachments/assets/258e4176-6863-4124-85d0-8ed363696a9c" />
+
 
 
 ## Этот проект создан в рамках образовательной программы Нетология.
