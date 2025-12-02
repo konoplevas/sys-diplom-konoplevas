@@ -22,7 +22,7 @@
 
 <img width="1057" height="354" alt="Терраформ 4" src="https://github.com/user-attachments/assets/4d9b5a75-5fe3-4e56-9829-bf8b87bedae5" />
 
-Разворачиваем ПО при Ansible (криншот 5)
+Разворачиваем ПО при помощи Ansible (криншот 5)
 
 <img width="960" height="776" alt="Ансибл" src="https://github.com/user-attachments/assets/82fe4694-db32-4e09-abd1-92a87ebcd54c" />
 
