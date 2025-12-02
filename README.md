@@ -120,13 +120,13 @@ Kibana доступна по адресу: http://158.160.34.63:5601/
 
 Приступаем к настройке резервного капирования, snapshot дисков всех ВМ. Ограничеваем время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование в 2 часа ночи.
 
-Снапшоты (скриншот 25)
+Снапшоты (скриншот 25-26)
 
-width="1053" height="714" alt="Снапшот диски" src="https://github.com/user-attachments/assets/c13e538e-ff7a-40b7-9691-06567dc578fa" />
+<img width="1441" height="313" alt="Снапшоты в облаке" src="https://github.com/user-attachments/assets/783641a0-8721-430e-8576-c7fedb61884a" />
 
 <img width="1053" height="714" alt="Снапшот диски" src="https://github.com/user-attachments/assets/bf109565-d038-4846-956c-ab95704ae60a" />
 
-Расписание снапшотов (скриншот 26)
+Расписание снапшотов (скриншот 27)
 
 <img width="1266" height="447" alt="Снапшот расписание" src="https://github.com/user-attachments/assets/258e4176-6863-4124-85d0-8ed363696a9c" />
 
