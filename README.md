@@ -122,7 +122,7 @@ Kibana доступна по адресу: http://158.160.34.63:5601/
 
 Снапшоты (скриншот 25)
 
-<img width="1441" height="313" alt="Сна<img width="1053" height="714" alt="Снапшот диски" src="https://github.com/user-attachments/assets/c13e538e-ff7a-40b7-9691-06567dc578fa" />
+width="1053" height="714" alt="Снапшот диски" src="https://github.com/user-attachments/assets/c13e538e-ff7a-40b7-9691-06567dc578fa" />
 
 <img width="1053" height="714" alt="Снапшот диски" src="https://github.com/user-attachments/assets/bf109565-d038-4846-956c-ab95704ae60a" />
 
