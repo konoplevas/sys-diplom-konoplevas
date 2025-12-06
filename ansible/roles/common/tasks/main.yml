@@ -11,8 +11,9 @@
 
 - name: Add Elastic repository from Yandex mirror
   apt_repository:
-    repo: "deb https://mirror.yandex.ru/mirrors/elastic/9/ stable main"
+    repo: "deb https://mirror.yandex.ru/mirrors/elastic/7.x/ stable main"
     state: present
+  when: "'elasticsearch' not in group_names"  # НЕ добавлять для elasticsearch хоста
 
 - name: Update apt cache
   apt:
@@ -31,6 +32,7 @@
   apt:
     name: filebeat
     state: present
+  when: "'elasticsearch' not in group_names"  # Filebeat не нужен на elasticsearch
 
 - name: Add ubuntu user to docker group
   user:

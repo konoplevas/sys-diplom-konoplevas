@@ -1,0 +1,3 @@
+---
+vault_elastic_password: "123"
+vault_zabbix_password: "zabbix123"

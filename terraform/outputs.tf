@@ -22,6 +22,6 @@ output "elastic_internal_ip" {
   value = yandex_compute_instance.elastic.network_interface.0.ip_address
 }
 
-output "alb_external_ip" {
-  value = data.yandex_alb_load_balancer.existing.listener.0.endpoint.0.address.0.external_ipv4_address.0.address
+output "snapshot_schedule_id" {
+  value = yandex_compute_snapshot_schedule.daily_backups.id
 }

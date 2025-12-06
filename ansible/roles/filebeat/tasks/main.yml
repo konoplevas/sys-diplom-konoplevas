@@ -1,12 +1,52 @@
 ---
+- name: Install apt-transport-https
+  apt:
+    name: apt-transport-https
+    state: present
+
+- name: Add Elastic GPG key
+  apt_key:
+    url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    state: present
+
+- name: Add Elastic repository
+  apt_repository:
+    repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+    state: present
+    update_cache: yes
+
+- name: Install Filebeat
+  apt:
+    name: filebeat
+    state: present
+    update_cache: yes
+
 - name: Configure Filebeat
   template:
     src: filebeat.yml.j2
     dest: /etc/filebeat/filebeat.yml
+    owner: root
+    group: root
+    mode: '0640'
   notify: restart filebeat
 
-- name: Enable and start Filebeat
+- name: Enable nginx module
+  command:
+    cmd: filebeat modules enable nginx
+    creates: /etc/filebeat/modules.d/nginx.yml
+
+- name: Enable system module
+  command:
+    cmd: filebeat modules enable system
+    creates: /etc/filebeat/modules.d/system.yml
+
+- name: Set up Filebeat
+  command:
+    cmd: filebeat setup -e
+
+- name: Start and enable Filebeat service
   systemd:
     name: filebeat
-    enabled: yes
     state: started
+    enabled: yes
+    daemon_reload: yes

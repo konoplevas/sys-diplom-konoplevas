@@ -1,15 +1,45 @@
 ---
+- name: Deploy infrastructure
+  hosts: all
+  become: yes
+  gather_facts: yes
+  
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+  roles:
+    - role: common
+
 - name: Configure Web Servers
   hosts: webservers
   become: yes
+  
   roles:
-    - nginx
-    - zabbix-agent
-    - log-sender
+    - role: nginx
+    - role: zabbix-agent
+    - role: filebeat  
 
-- name: Configure Zabbix Server with ELK
+- name: Configure Zabbix Server
   hosts: zabbix
   become: yes
+  
   roles:
-    - zabbix-server
-    - zabbix-agent
+    - role: zabbix-server
+    - role: zabbix-agent
+
+- name: Configure Elasticsearch
+  hosts: elasticsearch
+  become: yes
+  
+  roles:
+    - role: elasticsearch
+
+- name: Configure Kibana
+  hosts: kibana
+  become: yes
+  
+  roles:
+    - role: kibana

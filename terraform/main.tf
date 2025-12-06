@@ -4,6 +4,7 @@ terraform {
       source = "yandex-cloud/yandex"
     }
   }
+  required_version = ">= 1.3.0"
 }
 
 provider "yandex" {
@@ -13,29 +14,54 @@ provider "yandex" {
   zone      = "ru-central1-a"
 }
 
-# Используем существующую сеть diplom-net
-data "yandex_vpc_network" "existing" {
-  network_id = "enp10co0ihe62ni6nhe9"
+resource "yandex_vpc_network" "existing" {
+  name        = "diplom-net"
+  description = "Main network for diploma project"
 }
 
-# Используем существующие подсети
-data "yandex_vpc_subnet" "public-a" {
-  subnet_id = "e9bd6pedqfkq72v9pljb"
+resource "yandex_vpc_subnet" "public-a" {
+  name           = "diploma-public-a"
+  zone           = "ru-central1-a"
+  network_id     = yandex_vpc_network.existing.id
+  v4_cidr_blocks = ["10.130.0.0/24"]
 }
 
-data "yandex_vpc_subnet" "public-b" {
-  subnet_id = "e2lo6me7svv8dcdjc9qc"
+resource "yandex_vpc_subnet" "public-b" {
+  name           = "diploma-public-b"
+  zone           = "ru-central1-b"
+  network_id     = yandex_vpc_network.existing.id
+  v4_cidr_blocks = ["10.131.0.0/24"]
 }
 
-data "yandex_vpc_subnet" "private-a" {
-  subnet_id = "e9bguf5rep4rf738dcol"
+resource "yandex_vpc_subnet" "private-a" {
+  name           = "diploma-private-a"
+  zone           = "ru-central1-a"
+  network_id     = yandex_vpc_network.existing.id
+  v4_cidr_blocks = ["10.132.0.0/24"]
 }
 
-data "yandex_vpc_subnet" "private-b" {
-  subnet_id = "e2leg2v65kq5gbhin225"
+resource "yandex_vpc_subnet" "private-b" {
+  name           = "diploma-private-b"
+  zone           = "ru-central1-b"
+  network_id     = yandex_vpc_network.existing.id
+  v4_cidr_blocks = ["10.133.0.0/24"]
 }
 
-# BASTION host
+resource "yandex_vpc_gateway" "nat-gateway" {
+  name = "nat-gateway"
+  shared_egress_gateway {}
+}
+
+resource "yandex_vpc_route_table" "nat-route" {
+  name       = "nat-route"
+  network_id = yandex_vpc_network.existing.id
+
+  static_route {
+    destination_prefix = "0.0.0.0/0"
+    gateway_id         = yandex_vpc_gateway.nat-gateway.id
+  }
+}
+
 resource "yandex_compute_instance" "bastion" {
   name        = "bastion"
   hostname    = "bastion"
@@ -55,8 +81,9 @@ resource "yandex_compute_instance" "bastion" {
   }
 
   network_interface {
-    subnet_id = data.yandex_vpc_subnet.public-a.id
+    subnet_id = yandex_vpc_subnet.public-a.id
     nat       = true
+    security_group_ids = [yandex_vpc_security_group.bastion_sg.id]
   }
 
   metadata = {
@@ -68,7 +95,6 @@ resource "yandex_compute_instance" "bastion" {
   }
 }
 
-# WEB1 в приватной зоне A
 resource "yandex_compute_instance" "web1" {
   name        = "web1"
   hostname    = "web1"
@@ -89,8 +115,9 @@ resource "yandex_compute_instance" "web1" {
   }
 
   network_interface {
-    subnet_id = data.yandex_vpc_subnet.private-a.id
+    subnet_id = yandex_vpc_subnet.private-a.id
     nat       = false
+    security_group_ids = [yandex_vpc_security_group.web_sg.id]
   }
 
   metadata = {
@@ -102,7 +129,6 @@ resource "yandex_compute_instance" "web1" {
   }
 }
 
-# WEB2 в приватной зоне B  
 resource "yandex_compute_instance" "web2" {
   name        = "web2"
   hostname    = "web2"
@@ -123,8 +149,9 @@ resource "yandex_compute_instance" "web2" {
   }
 
   network_interface {
-    subnet_id = data.yandex_vpc_subnet.private-b.id
+    subnet_id = yandex_vpc_subnet.private-b.id
     nat       = false
+    security_group_ids = [yandex_vpc_security_group.web_sg.id]
   }
 
   metadata = {
@@ -136,7 +163,6 @@ resource "yandex_compute_instance" "web2" {
   }
 }
 
-# ZABBIX сервер
 resource "yandex_compute_instance" "zabbix" {
   name        = "zabbix"
   hostname    = "zabbix"
@@ -156,8 +182,9 @@ resource "yandex_compute_instance" "zabbix" {
   }
 
   network_interface {
-    subnet_id = data.yandex_vpc_subnet.public-a.id
+    subnet_id = yandex_vpc_subnet.public-a.id
     nat       = true
+    security_group_ids = [yandex_vpc_security_group.zabbix_sg.id]
   }
 
   metadata = {
@@ -169,7 +196,6 @@ resource "yandex_compute_instance" "zabbix" {
   }
 }
 
-# Elasticsearch сервер
 resource "yandex_compute_instance" "elastic" {
   name        = "elastic"
   hostname    = "elastic"
@@ -189,8 +215,9 @@ resource "yandex_compute_instance" "elastic" {
   }
 
   network_interface {
-    subnet_id = data.yandex_vpc_subnet.private-a.id
+    subnet_id = yandex_vpc_subnet.private-a.id
     nat       = false
+    security_group_ids = [yandex_vpc_security_group.elastic_sg.id]
   }
 
   metadata = {
@@ -202,7 +229,6 @@ resource "yandex_compute_instance" "elastic" {
   }
 }
 
-# Kibana сервер
 resource "yandex_compute_instance" "kibana" {
   name        = "kibana"
   hostname    = "kibana"
@@ -222,8 +248,9 @@ resource "yandex_compute_instance" "kibana" {
   }
 
   network_interface {
-    subnet_id = data.yandex_vpc_subnet.public-a.id
+    subnet_id = yandex_vpc_subnet.public-a.id
     nat       = true
+    security_group_ids = [yandex_vpc_security_group.kibana_sg.id]
   }
 
   metadata = {
@@ -235,37 +262,54 @@ resource "yandex_compute_instance" "kibana" {
   }
 }
 
-# Используем существующие ALB компоненты
-
-# NAT Gateway
-resource "yandex_vpc_gateway" "nat-gateway" {
-  name = "nat-gateway"
-  shared_egress_gateway {}
-}
-
-resource "yandex_vpc_route_table" "nat-route" {
-  name       = "nat-route"
-  network_id = "enp10co0ihe62ni6nhe9"
-
-  static_route {
-    destination_prefix = "0.0.0.0/0"
-    gateway_id         = yandex_vpc_gateway.nat-gateway.id
-  }
-}
-
-# Обновляем приватные подсети чтобы использовали NAT
-
-
-# Security Groups
 resource "yandex_vpc_security_group" "bastion_sg" {
   name       = "bastion-security-group"
-  network_id = data.yandex_vpc_network.existing.id
+  network_id = yandex_vpc_network.existing.id
 
   ingress {
     protocol       = "TCP"
     description    = "SSH"
     port           = 22
     v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Zabbix Agent"
+    port           = 10050
+    v4_cidr_blocks = ["10.130.0.0/24"]  # Zabbix server subnet
+  }
+
+  egress {
+    protocol       = "ANY"
+    description    = "Outbound traffic"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "yandex_vpc_security_group" "web_sg" {
+  name       = "web-security-group"
+  network_id = yandex_vpc_network.existing.id
+
+  ingress {
+    protocol       = "TCP"
+    description    = "HTTP"
+    port           = 80
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "SSH from bastion"
+    port           = 22
+    v4_cidr_blocks = ["10.130.0.0/24"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Zabbix Agent"
+    port           = 10050
+    v4_cidr_blocks = ["10.130.0.0/24"]  # Zabbix server subnet
   }
 
   egress {
@@ -277,7 +321,7 @@ resource "yandex_vpc_security_group" "bastion_sg" {
 
 resource "yandex_vpc_security_group" "zabbix_sg" {
   name       = "zabbix-security-group"
-  network_id = data.yandex_vpc_network.existing.id
+  network_id = yandex_vpc_network.existing.id
 
   ingress {
     protocol       = "TCP"
@@ -323,7 +367,7 @@ resource "yandex_vpc_security_group" "zabbix_sg" {
 
 resource "yandex_vpc_security_group" "elastic_sg" {
   name       = "elastic-security-group"
-  network_id = data.yandex_vpc_network.existing.id
+  network_id = yandex_vpc_network.existing.id
 
   ingress {
     protocol       = "TCP"
@@ -346,6 +390,13 @@ resource "yandex_vpc_security_group" "elastic_sg" {
     v4_cidr_blocks = ["192.168.0.0/16"]
   }
 
+  ingress {
+    protocol       = "TCP"
+    description    = "Zabbix Agent"
+    port           = 10050
+    v4_cidr_blocks = ["10.130.0.0/24"]  # Zabbix server subnet
+  }
+
   egress {
     protocol       = "ANY"
     description    = "Outbound traffic"
@@ -353,25 +404,60 @@ resource "yandex_vpc_security_group" "elastic_sg" {
   }
 }
 
-# Security Groups
-# ALB для Zabbix
-resource "yandex_alb_target_group" "zabbix_tg" {
-  name = "zabbix-target-group"
+resource "yandex_vpc_security_group" "kibana_sg" {
+  name       = "kibana-security-group"
+  network_id = yandex_vpc_network.existing.id
 
-  target {
-    subnet_id  = data.yandex_vpc_subnet.public-a.id
-    ip_address = yandex_compute_instance.zabbix.network_interface.0.ip_address
+  ingress {
+    protocol       = "TCP"
+    description    = "Kibana Web Interface"
+    port           = 5601
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "SSH"
+    port           = 22
+    v4_cidr_blocks = ["192.168.0.0/16"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Zabbix Agent"
+    port           = 10050
+    v4_cidr_blocks = ["10.130.0.0/24"]  # Zabbix server subnet
+  }
+
+  egress {
+    protocol       = "ANY"
+    description    = "Outbound traffic"
+    v4_cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
-resource "yandex_alb_backend_group" "zabbix_bg" {
-  name = "zabbix-backend-group"
+resource "yandex_alb_target_group" "web_tg" {
+  name = "web-target-group"
+
+  target {
+    subnet_id  = yandex_vpc_subnet.private-a.id
+    ip_address = yandex_compute_instance.web1.network_interface.0.ip_address
+  }
+
+  target {
+    subnet_id  = yandex_vpc_subnet.private-b.id
+    ip_address = yandex_compute_instance.web2.network_interface.0.ip_address
+  }
+}
+
+resource "yandex_alb_backend_group" "web_bg" {
+  name = "web-backend-group"
 
   http_backend {
-    name             = "zabbix-backend"
+    name             = "web-backend"
     weight           = 1
     port             = 80
-    target_group_ids = [yandex_alb_target_group.zabbix_tg.id]
+    target_group_ids = [yandex_alb_target_group.web_tg.id]
 
     healthcheck {
       timeout          = "10s"
@@ -384,55 +470,60 @@ resource "yandex_alb_backend_group" "zabbix_bg" {
   }
 }
 
-resource "yandex_alb_http_router" "zabbix_router" {
-  name = "zabbix-router"
+resource "yandex_alb_http_router" "web_router" {
+  name = "web-router"
 }
 
-resource "yandex_alb_virtual_host" "zabbix_host" {
-  name           = "zabbix-virtual-host"
-  http_router_id = yandex_alb_http_router.zabbix_router.id
+resource "yandex_alb_virtual_host" "web_host" {
+  name           = "web-virtual-host"
+  http_router_id = yandex_alb_http_router.web_router.id
 
   route {
-    name = "zabbix-route"
+    name = "web-route"
     http_route {
       http_route_action {
-        backend_group_id = yandex_alb_backend_group.zabbix_bg.id
+        backend_group_id = yandex_alb_backend_group.web_bg.id
         timeout          = "60s"
       }
     }
   }
 }
 
-#resource "yandex_alb_load_balancer" "zabbix_alb" {
-#  name               = "zabbix-load-balancer"
-#  network_id         = data.yandex_vpc_network.existing.id
-#
-#  allocation_policy {
-#    location {
-#      zone_id   = "ru-central1-a"
-#      subnet_id = data.yandex_vpc_subnet.public-a.id
-#    }
-#  }
-#
-#  listener {
-#    name = "zabbix-listener"
-#    endpoint {
-#      address {
-#        external_ipv4_address {
-#        }
-#      }
-#      ports = [80]
-#    }
-#    http {
-#      handler {
-#        http_router_id = yandex_alb_http_router.zabbix_router.id
-#      }
-#    }
+resource "yandex_alb_load_balancer" "web_alb" {
+  name               = "web-balancer"
+  network_id         = yandex_vpc_network.existing.id
+  region_id          = "ru-central1"
 
-# Security Group specifically for ALB
+  allocation_policy {
+    location {
+      zone_id   = "ru-central1-a"
+      subnet_id = yandex_vpc_subnet.public-a.id
+    }
+    location {
+      zone_id   = "ru-central1-b"
+      subnet_id = yandex_vpc_subnet.public-b.id
+    }
+  }
+
+  listener {
+    name = "web-listener"
+    endpoint {
+      address {
+        external_ipv4_address {}
+      }
+      ports = [80]
+    }
+    http {
+      handler {
+        http_router_id = yandex_alb_http_router.web_router.id
+      }
+    }
+  }
+}
+
 resource "yandex_vpc_security_group" "alb_sg" {
   name       = "alb-security-group"
-  network_id = data.yandex_vpc_network.existing.id
+  network_id = yandex_vpc_network.existing.id
 
   ingress {
     protocol       = "TCP"
@@ -455,31 +546,18 @@ resource "yandex_vpc_security_group" "alb_sg" {
   }
 }
 
-# Data source for existing working ALB
-data "yandex_alb_load_balancer" "existing" {
-  name = "web-balancer"
-}
-
-
-# Output for verification
-
-
-
-
-# Daily snapshot schedules for all VMs
 resource "yandex_compute_snapshot_schedule" "daily_backups" {
   name             = "daily-snapshots"
   description      = "Daily backups for all VMs"
   snapshot_count   = 7
-  retention_period = "604800s" # 7 days in seconds
+  retention_period = "604800s"
 
   schedule_policy {
-    expression = "0 2 * * *" # Daily at 02:00 AM
+    expression = "0 2 * * *"
   }
 
   snapshot_spec {}
 
-  # List of all VM disks
   disk_ids = [
     yandex_compute_instance.bastion.boot_disk.0.disk_id,
     yandex_compute_instance.web1.boot_disk.0.disk_id,
@@ -490,7 +568,3 @@ resource "yandex_compute_snapshot_schedule" "daily_backups" {
   ]
 }
 
-output "snapshot_schedule_id" {
-  value       = yandex_compute_snapshot_schedule.daily_backups.id
-  description = "Snapshot schedule ID"
-}

@@ -1,21 +1,40 @@
 variable "yc_token" {
+  description = "Yandex Cloud OAuth token"
   type        = string
   sensitive   = true
-  description = "Yandex Cloud OAuth token"
 }
 
 variable "yc_cloud_id" {
-  type        = string
   description = "Yandex Cloud ID"
+  type        = string
+  sensitive   = true
 }
 
 variable "yc_folder_id" {
+  description = "Yandex Cloud folder ID"
   type        = string
-  description = "Yandex Cloud Folder ID"
+  default     = "b1gc2ba7jfvljkdq70r6"
 }
 
 variable "ssh_public_key" {
-  type        = string
   description = "SSH public key"
-  default     = "~/.ssh/id_rsa_diploma.pub"
+  type        = string
+}
+
+variable "elastic_password" {
+  description = "Password for Elasticsearch"
+  type        = string
+  sensitive   = true
+}
+
+variable "zabbix_password" {
+  description = "Password for Zabbix"
+  type        = string
+  sensitive   = true
+}
+
+variable "kibana_password" {
+  description = "Password for Kibana"
+  type        = string
+  sensitive   = true
 }

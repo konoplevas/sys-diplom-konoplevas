@@ -1,14 +1,15 @@
 ---
+# Elasticsearch
+elasticsearch_host: "10.132.0.11"
+elastic_password: "{{ vault_elastic_password }}"
+
+# Kibana
+kibana_host: "158.160.34.63"
+kibana_password: "{{ vault_kibana_password }}"
+
+# Zabbix
+zabbix_password: "{{ vault_zabbix_password }}"
+
+# Ansible settings
 ansible_user: ubuntu
 ansible_ssh_private_key_file: "~/.ssh/id_rsa_diploma"
-
-# Zabbix settings
-zabbix_server_ip: "zabbix.ru-central1.internal"
-zabbix_server_host: "zabbix.ru-central1.internal"
-
-# Elasticsearch settings  
-elasticsearch_ip: "zabbix.ru-central1.internal"
-elasticsearch_host: "zabbix.ru-central1.internal"
-
-# Kibana settings
-kibana_host: "zabbix.ru-central1.internal"
