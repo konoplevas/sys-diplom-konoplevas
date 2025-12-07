@@ -1,3 +1,4 @@
 ---
-vault_elastic_password: "123"
+vault_elastic_password: "8DJlpJ1zJrV3jRNXyYbT"
 vault_zabbix_password: "zabbix123"
+vault_kibana_password: "8DJlpJ1zJrV3jRNXyYbT"

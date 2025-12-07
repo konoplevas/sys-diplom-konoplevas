@@ -5,25 +5,35 @@ all:
       hosts:
         web1.diploma.ru-central1.internal:
           ansible_host: 10.132.0.32
-          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q ubuntu@89.169.145.11"'
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -i ~/.ssh/id_rsa_diploma -W %h:%p -q ubuntu@89.169.145.11"'
+          elasticsearch_host: "10.132.0.11"
+          kibana_host: "158.160.34.63"
         web2.diploma.ru-central1.internal:
           ansible_host: 10.133.0.3
-          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q ubuntu@89.169.145.11"'
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -i ~/.ssh/id_rsa_diploma -W %h:%p -q ubuntu@89.169.145.11"'
+          elasticsearch_host: "10.132.0.11"
+          kibana_host: "158.160.34.63"
     zabbix:
       hosts:
         zabbix.diploma.ru-central1.internal:
           ansible_host: 158.160.107.7
           # Zabbix имеет внешний IP, поэтому ProxyJump не нужен
+          elasticsearch_host: "10.132.0.11"
+          kibana_host: "158.160.34.63"
     elasticsearch:
       hosts:
         elastic.diploma.ru-central1.internal:
           ansible_host: 10.132.0.11
-          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q ubuntu@89.169.145.11"'
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -i ~/.ssh/id_rsa_diploma -W %h:%p -q ubuntu@89.169.145.11"'
+          elasticsearch_host: "10.132.0.11"
+          kibana_host: "158.160.34.63"
     kibana:
       hosts:
         kibana.diploma.ru-central1.internal:
           ansible_host: 158.160.34.63
           # Kibana имеет внешний IP, поэтому ProxyJump не нужен
+          elasticsearch_host: "10.132.0.11"
+          kibana_host: "158.160.34.63"
 
   vars:
     ansible_user: ubuntu

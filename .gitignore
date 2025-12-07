@@ -16,3 +16,4 @@ terraform/.terraform.lock.hcl
 # Backup files
 *.backup
 terraform/.terraform/
+sys-diplom-konoplevas/

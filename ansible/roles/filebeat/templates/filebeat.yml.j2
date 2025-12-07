@@ -1,5 +1,5 @@
 filebeat.inputs:
-- type: log
+- type: filestream
   enabled: true
   paths:
     - /var/log/nginx/access.log
@@ -7,7 +7,7 @@ filebeat.inputs:
     type: nginx-access
   fields_under_root: true
 
-- type: log
+- type: filestream
   enabled: true
   paths:
     - /var/log/nginx/error.log
@@ -15,39 +15,7 @@ filebeat.inputs:
     type: nginx-error
   fields_under_root: true
 
-- type: log
-  enabled: true
-  paths:
-    - /var/log/zabbix/zabbix_server.log
-  fields:
-    type: zabbix-server
-  fields_under_root: true
-
-filebeat.config.modules:
-  path: ${path.config}/modules.d/*.yml
-  reload.enabled: false
-
-setup.kibana:
-  host: "{{ kibana_host }}:5601"
-
 output.elasticsearch:
   hosts: ["{{ elasticsearch_host }}:9200"]
-  username: elastic
+  username: "elastic"
   password: "{{ elastic_password }}"
-  indices:
-    - index: "nginx-access-%{[agent.version]}-%{+yyyy.MM.dd}"
-      when.equals:
-        fields.type: "nginx-access"
-    - index: "nginx-error-%{[agent.version]}-%{+yyyy.MM.dd}"
-      when.equals:
-        fields.type: "nginx-error"
-    - index: "zabbix-server-%{[agent.version]}-%{+yyyy.MM.dd}"
-      when.equals:
-        fields.type: "zabbix-server"
-
-setup.dashboards.enabled: true
-
-processors:
-  - add_host_metadata:
-      when.not.contains.tags: forwarded
-  - add_cloud_metadata: ~
