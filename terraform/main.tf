@@ -277,7 +277,7 @@ resource "yandex_vpc_security_group" "bastion_sg" {
     protocol       = "TCP"
     description    = "Zabbix Agent"
     port           = 10050
-    v4_cidr_blocks = ["10.130.0.0/24"]  # Zabbix server subnet
+    v4_cidr_blocks = ["10.130.0.0/24"]
   }
 
   egress {
@@ -309,7 +309,7 @@ resource "yandex_vpc_security_group" "web_sg" {
     protocol       = "TCP"
     description    = "Zabbix Agent"
     port           = 10050
-    v4_cidr_blocks = ["10.130.0.0/24"]  # Zabbix server subnet
+    v4_cidr_blocks = ["10.130.0.0/24"]
   }
 
   egress {
@@ -328,13 +328,6 @@ resource "yandex_vpc_security_group" "zabbix_sg" {
     description    = "HTTP for web interface"
     port           = 80
     v4_cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol       = "TCP"
-    description    = "ALB Health Checks"
-    port           = 80
-    v4_cidr_blocks = ["198.18.235.0/24", "198.18.248.0/24"]
   }
 
   ingress {
@@ -394,7 +387,7 @@ resource "yandex_vpc_security_group" "elastic_sg" {
     protocol       = "TCP"
     description    = "Zabbix Agent"
     port           = 10050
-    v4_cidr_blocks = ["10.130.0.0/24"]  # Zabbix server subnet
+    v4_cidr_blocks = ["10.130.0.0/24"]
   }
 
   egress {
@@ -426,7 +419,7 @@ resource "yandex_vpc_security_group" "kibana_sg" {
     protocol       = "TCP"
     description    = "Zabbix Agent"
     port           = 10050
-    v4_cidr_blocks = ["10.130.0.0/24"]  # Zabbix server subnet
+    v4_cidr_blocks = ["10.130.0.0/24"]
   }
 
   egress {
@@ -567,4 +560,3 @@ resource "yandex_compute_snapshot_schedule" "daily_backups" {
     yandex_compute_instance.kibana.boot_disk.0.disk_id
   ]
 }
-
