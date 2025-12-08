@@ -41,14 +41,9 @@
 
 <img width="676" height="152" alt="Сайт балансировщик" src="https://github.com/user-attachments/assets/89518f81-1971-4063-8e38-858085ee707b" />
 
-Проверка работоспособности балансировщика с отключением попеременно web 1 и web 2 (скриншот 9-11)
+Проверка работоспособности балансировщика с отключением попеременно web 1 и web 2 (скриншот 9)
 
-<img width="519" height="441" alt="Сайт балансировщик 2" src="https://github.com/user-attachments/assets/5b979ffe-b172-4718-a5f9-6672c39533fc" />
-
-<img width="1021" height="347" alt="Сайт отключение web 1" src="https://github.com/user-attachments/assets/e7e2ec59-0bb8-4e1d-9ca4-4d0788a0089c" />
-
-<img width="1028" height="350" alt="Сайт проверка отключение web 2" src="https://github.com/user-attachments/assets/6c2ce99a-acda-46b4-b4e6-081bf1516003" />
-
+<img width="620" height="631" alt="Проверка работы балансировщика" src="https://github.com/user-attachments/assets/d4e1f17a-eb12-484b-8c56-b73e3f6f8a64" />
 
 Сайт доступен по адресу: http://130.193.56.231/
 
@@ -58,7 +53,7 @@
 
 Настраиваем дешборды с отображением метрик, минимальный набор — по принципу USE (Utilization, Saturation, Errors) для CPU, RAM, диски, сеть, http запросов к веб-серверам. 
 
-Установка Zabbix и Zabbix agent. Добавляем ВМ для мониторинга в Zabbix(скриншот 12-14)
+Установка Zabbix и Zabbix agent. Добавляем ВМ для мониторинга в Zabbix(скриншот 10-12)
 
 <img width="1781" height="288" alt="Хосты в заббикс" src="https://github.com/user-attachments/assets/49c884ac-c969-43a1-bf39-d3629fe80034" />
 
@@ -66,7 +61,7 @@
 
 <img width="930" height="413" alt="Заббикс агент 2" src="https://github.com/user-attachments/assets/2e7b0254-f480-4382-b48d-54b0626c79a2" />
 
-Создаём дашборды мониторинга Zabbix в вебинтерфейсе и настраиваем триггеры (скриншот 14-17)
+Создаём дашборды мониторинга Zabbix в вебинтерфейсе и настраиваем триггеры (скриншот 13-16)
 
 <img width="1824" height="843" alt="Заббикс мониторинг" src="https://github.com/user-attachments/assets/07868fea-35e4-48de-9a5a-adb40ffce638" />
 
@@ -86,31 +81,31 @@ Password: zabbix
 
 на 2 ВМ, разворачиваем Elasticsearch и Kibana. Настраиваем мониторинг логов в вебинтерфейсе Kibana. Конфигурируем соединение с Elasticsearch. Устанавливаем Filebeat для отправки access.log, error.log nginx в Elasticsearch.
 
-Установка Elasticsearch (скриншот 18)
+Установка Elasticsearch (скриншот 17)
 
 <img width="1025" height="451" alt="Установка еластик" src="https://github.com/user-attachments/assets/860ed498-f42a-4dc6-b17d-2ac4aa6eb473" />
 
-Проверка доступности Elasticsearch (скриншот 19-20)
+Проверка доступности Elasticsearch (скриншот 18-19)
 
 <img width="581" height="456" alt="Еластик веб" src="https://github.com/user-attachments/assets/cca51319-f718-426d-9436-ce7e0947a65e" />
 
 <img width="1236" height="652" alt="Еластик проверка" src="https://github.com/user-attachments/assets/9e6921e1-4164-4395-b68d-39b4ea95b019" />
 
-Установка Kibana (скриншот 21)
+Установка Kibana (скриншот 20)
 
 <img width="1338" height="629" alt="Кибана проверка" src="https://github.com/user-attachments/assets/78fbbf82-6dda-4737-8dc1-41440e014682" />
 
-Устанавливаем Filebeat для отправки логов и проверяем работоспособность( скриншот 22)
+Устанавливаем Filebeat для отправки логов и проверяем работоспособность( скриншот 21)
 
 <img width="1326" height="521" alt="Логи филбит веб1" src="https://github.com/user-attachments/assets/c677b339-c739-422a-ab15-ef2052440540" />
 
 <img width="1340" height="600" alt="ЛОГИ филбит веб2" src="https://github.com/user-attachments/assets/a7f570a2-f7ba-44b9-b96b-a230822f6818" />
 
-Проверка сбора логов Kibana (скриншот 23-24)
+Проверка сбора логов Kibana (скриншот 22-23)
 
-<img width="1787" height="734" alt="Кибана логи 1" src="https://github.com/user-attachments/assets/2f42053f-d824-460e-9d0f-aa0395a1c6c8" />
+<img width="1653" height="795" alt="Кибана Логи" src="https://github.com/user-attachments/assets/805462ee-d370-42b0-b301-2446725a7b07" />
 
-<img width="1782" height="841" alt="Кибана дашборд" src="https://github.com/user-attachments/assets/0dade5d1-ac5a-4afe-833d-3d4ca44cd5a4" />
+<img width="1648" height="838" alt="Логи Кибана" src="https://github.com/user-attachments/assets/a602971b-14d6-410f-a147-67ee029d92ba" />
 
 Elastic доступен по адресу: http://localhost:9200/
 
@@ -120,13 +115,13 @@ Kibana доступна по адресу: http://158.160.34.63:5601/
 
 Приступаем к настройке резервного капирования, snapshot дисков всех ВМ. Ограничеваем время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование в 2 часа ночи.
 
-Снапшоты (скриншот 25-26)
+Снапшоты (скриншот 24-25)
 
 <img width="1441" height="313" alt="Снапшоты в облаке" src="https://github.com/user-attachments/assets/783641a0-8721-430e-8576-c7fedb61884a" />
 
 <img width="1053" height="714" alt="Снапшот диски" src="https://github.com/user-attachments/assets/bf109565-d038-4846-956c-ab95704ae60a" />
 
-Расписание снапшотов (скриншот 27)
+Расписание снапшотов (скриншот 26)
 
 <img width="1266" height="447" alt="Снапшот расписание" src="https://github.com/user-attachments/assets/258e4176-6863-4124-85d0-8ed363696a9c" />
 
